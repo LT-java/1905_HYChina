@@ -7,6 +7,7 @@ import com.syc.china.entity.ErrorCode;
 import com.syc.china.entity.JWT;
 import com.syc.china.entity.User;
 import com.syc.china.feign.AuthClientFeign;
+import com.syc.china.mapper.UserMapper;
 import com.syc.china.service.UserService;
 import com.syc.china.util.BPwdEncoderUtils;
 import com.syc.china.utils.NumberUtils;
@@ -29,6 +30,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private AuthClientFeign clientFeign;
 
+    @Autowired
+    private UserMapper userMapper;
 
     @Autowired
     private AmqpTemplate amqpTemplate;
@@ -102,4 +105,7 @@ public class UserServiceImpl implements UserService {
         return userDao.save(user);
     }
 
+    public String queryRoleName(Integer id) {
+        return userMapper.queryRoleName(id);
+    }
 }

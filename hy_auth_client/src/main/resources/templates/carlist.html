@@ -40,12 +40,16 @@
 </head>
 
 <body class="text-center">
-   <!-- <a th:text="|欢迎管理员: ${session.token}登录|">Company name</a>-->
 
+   <!-- <a th:text="|欢迎管理员: ${session.token}登录|">Company name</a>-->>
     <div class="d1">
-        <!--<span th:text = "${session.token}" class="sp">-->
+        <span th:text="|欢迎登录，你的身份是：${session.roleName}|" style="color: red;"></span>
         <h1>全部車源信息</h1>
-        <button> 搜索</button>
+        <form th:action="@{/cars/query}" method="get">
+            <input type="text" name="key" />
+            <button type="submit">搜索</button>
+        </form>
+
 
         <table class="table table-hover">
             <tr>
@@ -58,13 +62,13 @@
                 <th>操作</th>
             </tr>
             <tr th:each="car : ${cars}">
-                <td th:text="${car.id}"></td>
+                <td id="td1" th:text="${car.id}" th:value="${car.id}"></td>
                 <td th:text="${car.startName}+|——>${car.endName}|"></td>
                 <td th:text="|车辆类型-${car.carName},${car.transportName},${car.weight}${car.unitName},${car.goodsName},${car.price}元/${car.unitName}|"></td>
                 <td th:text="${car.startTime}"></td>
                 <td th:text="${car.ownerName}"></td>
                 <td th:text="${car.phone}"></td>
-                <td><a th:href="@{/api/source/cars/delete/}+${car.id}">删除</a>&nbsp;<a th:href="@{/api/source/cars/showUpdate/}+${car.id}">修改</a>&nbsp;<a th:href="@{/api/source/cars/watch/}+${car.id}">查看</a></td>
+                <td><a th:href="@{/cars/delete/}+${car.id}">删除</a>&nbsp;<a th:href="@{/cars/showUpdate/}+${car.id}">修改</a>&nbsp;<a th:href="@{/cars/watch/}+${car.id}">查看</a></td>
             </tr>
         </table>
         <!--显示分页信息-->
@@ -75,51 +79,93 @@
 
             <ul class="pagination pull-right no-margin">
                 <li th:if="${pageInfo.hasPreviousPage}">
-                    <a th:href="'/api/source/cars/query?pageNum=1'">首页</a>
+                    <a th:href="'/cars/query?pageNum=1'">首页</a>
                 </li>
 
                 <li class="prev" th:if="${pageInfo.hasPreviousPage}">
-                    <a th:href="'/api/source/cars/query?pageNum='+${pageInfo.prePage}">
+                    <a th:href="'/cars/query?pageNum='+${pageInfo.prePage}">
                         <i class="ace-icon fa fa-angle-double-left"></i>
                     </a>
                 </li>
                 <!--遍历条数-->
                 <li th:each="nav:${pageInfo.navigatepageNums}">
-                    <a th:href="'/api/source/cars/query?pageNum='+${nav}" th:text="${nav}" th:if="${nav != pageInfo.pageNum}"></a>
+                    <a th:href="'/cars/query?pageNum='+${nav}" th:text="${nav}" th:if="${nav != pageInfo.pageNum}"></a>
                     <span style="font-weight: bold;background: #6faed9;" th:if="${nav == pageInfo.pageNum}" th:text="${nav}" ></span>
                 </li>
 
                 <li class="next" th:if="${pageInfo.hasNextPage}">
-                    <a th:href="'/api/source/cars/query?pageNum='+${pageInfo.nextPage}">
+                    <a th:href="'/cars/query?pageNum='+${pageInfo.nextPage}">
                         <i class="ace-icon fa fa-angle-double-right"></i>
                     </a>
                 </li>
 
                 <li>
-                    <a th:href="'/api/source/cars/query?pageNum='+${pageInfo.pages}">尾页</a>
+                    <a th:href="'/cars/query?pageNum='+${pageInfo.pages}">尾页</a>
                 </li>
             </ul>
         </div>
-        <a th:href="@{/api/source/cars/add}"><button class = "b1">发布车源</button></a>
-        <a th:href="@{/api/source/goods/add}"><button class = "b2">发布货源</button></a>
-        <button class = "b3">查看货源</button>
+        <button class = "b1">发布车源</button>
+        <button class = "b2">发布货源</button>
+        <a th:href="@{/goods/query}"><button class = "b3">查看货源</button></a>
         <input type="hidden" th:value="${session.token}" id="in1"/>
     </div>
 </body>
 <script src="../js/jquery-3.1.1.js"></script>
 <script>
-    $(".b3").click(function() {
+    $(".b2").click(function() {
         //alert($("#in1").val());
         $.ajax({
             type: "GET",
-            url: "/goods/query",
+            url: "/goods/authAdd",
             beforeSend: function(request) {
                 request.setRequestHeader("authorization","Bearer " + $("#in1").val());
             },
             success: function(result) {
+                if(result){
+                    window.location.href="/goods/add";
+                }
+            },
+            error:function () {
+                alert("无权限使用该功能")
             }
         });
     });
+    $(".b1").click(function() {
+        //alert($("#in1").val());
+        $.ajax({
+            type: "GET",
+            url: "/cars/authAdd",
+            beforeSend: function(request) {
+                request.setRequestHeader("authorization","Bearer " + $("#in1").val());
+            },
+            success: function(result) {
+                if(result){
+                    window.location.href="/cars/add";
+                }
+            },
+            error:function () {
+                alert("无权限使用该功能")
+            }
+        });
+    });
+   /* function authUpdate() {
+        //alert($("#in1").val());
+        alert($("#ai").val());
+        $.ajax({
+            type: "GET",
+            url: "/cars/authShowUpdate/" + car.id,
+            beforeSend: function(request) {
+                request.setRequestHeader("authorization","Bearer " + $("#in1").val());
+            },
+            success: function(result) {
+                if(result){
+                    window.location.href="/cars/showUpdate/" + result;
+                }
+            }
+        });
+    }*/
+
+
 
 </script>
 </html>

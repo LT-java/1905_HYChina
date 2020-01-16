@@ -91,7 +91,7 @@ public class GoodsSourceService {
      * @return
      */
     public int insert(GoodsSource goodsSource) {
-        return goodsSourceMapper.insert(goodsSource);
+        return goodsSourceMapper.insertSelective(goodsSource);
     }
 
     /**

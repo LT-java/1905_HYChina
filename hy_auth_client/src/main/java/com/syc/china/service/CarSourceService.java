@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CarSourceService {
@@ -38,6 +40,7 @@ public class CarSourceService {
      */
     public List<CarSource> queryAll(Integer pageNum,Integer pageSize,String key) {
 
+
         //为了程序的严谨性，判断非空：
         if(pageNum == null){
             pageNum = 1;   //设置默认当前页
@@ -52,12 +55,40 @@ public class CarSourceService {
         //过滤
         Example example = new Example(CarSource.class);
 
-        if(StringUtils.isNotBlank(key)){
-            example.createCriteria().andLike("carName","%" + key + "%");
+        if(org.apache.commons.lang.StringUtils.isNotBlank(key)) {
+            Example example1 = new Example(Car.class);
+            example1.createCriteria().andLike("name", "%" + key + "%");
+            List<Car> cars = carMapper.selectByExample(example1);
+            List<Integer> list = cars.stream().map(s->s.getId()).collect(Collectors.toList());
+            List<CarSource> carSources = new ArrayList<>();
+
+            for (int i = 0; i < list.size(); i++) {
+                int carId=list.get(i);
+                CarSource carSource=new CarSource();
+                carSource.setCarId(carId);
+                List<CarSource> select = carSourceMapper.select(carSource);
+                for(CarSource c : select){
+                    carSources.add(c);
+                }
+            }
+            for (CarSource car : carSources) {
+                String pName = provinceMapper.selectByPrimaryKey(car.getProvinceId()).getName();
+                String cName = cityMapper.selectByPrimaryKey(car.getCityId()).getName();
+                String dName = districtMapper.selectByPrimaryKey(car.getDistrictId()).getName();
+                String pEndName = provinceMapper.selectByPrimaryKey(car.getProvinceIdEnd()).getName();
+                String cEndName = cityMapper.selectByPrimaryKey(car.getCityIdEnd()).getName();
+                String dEndName = districtMapper.selectByPrimaryKey(car.getDistrictIdEnd()).getName();
+                car.setStartName(pName+cName+dName);
+                car.setEndName(pEndName+cEndName+dEndName);
+                car.setCarName(carMapper.selectByPrimaryKey(car.getCarId()).getName());
+                car.setGoodsName(goodsMapper.selectByPrimaryKey(car.getGoodsId()).getName());
+                car.setTransportName(transportMapper.selectByPrimaryKey(car.getTransportId()).getName());
+                car.setUnitName(unitMapper.selectByPrimaryKey(car.getUnitId()).getName());
+            }
+            return carSources;
         }
 
         List<CarSource> cars = carSourceMapper.selectByExample(example);
-
         for (CarSource car : cars) {
             String pName = provinceMapper.selectByPrimaryKey(car.getProvinceId()).getName();
             String cName = cityMapper.selectByPrimaryKey(car.getCityId()).getName();
@@ -80,21 +111,7 @@ public class CarSourceService {
 
         return cars;
     }
-   /* public PageResult<CarSource> queryCarsourcesPage(Integer page, Integer rows,String key) {
-        PageHelper.startPage(page, rows);
-        Example example = new Example(CarSource.class);
-        if (StringUtils.isNotBlank(key)) {
-            //此处要注意空格 代码紧密会报错sql语法错误
-            example.createCriteria().andLike("ownerName", "%" + key + "%");
-        }
-        List<CarSource> CarSource = carSourceMapper.selectByExample(example);
-        PageInfo<CarSource> info = new PageInfo<>(CarSource);
-        PageResult<CarSource> page1 = new PageResult<>();
-        page1.setTotal(info.getTotal());
-        page1.setItems(CarSource);
-        page1.setTotalPage(Long.valueOf(info.getPages()));
-        return page1;
-    }*/
+
     /**
      * 添加货源的方法
      * @param carSource

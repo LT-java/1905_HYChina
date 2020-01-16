@@ -48,74 +48,8 @@ public class UserController {
     private RoleService roleService;
 
 
-    /**
-     * 验证码生成
-     * */
-/*    @RequestMapping("/code")
-    public void defaultKaptcha(HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse) throws Exception {
-        byte[] captchaChallengeAsJpeg = null;
-        ByteArrayOutputStream jpegOutputStream = new ByteArrayOutputStream();
-        try {
-            //生产验证码字符串并保存到session中
-            String createText = defaultKaptcha.createText();
-
-            redisTemplate.opsForValue().set("code",createText);
-            //httpServletRequest.setAttribute("code",createText);
-            System.out.println(redisTemplate.opsForValue().get("code"));
-            //使用生产的验证码字符串返回一个BufferedImage对象并转为byte写入到byte数组中
-            BufferedImage challenge = defaultKaptcha.createImage(createText);
-            ImageIO.write(challenge, "jpg", jpegOutputStream);
-        } catch (IllegalArgumentException e) {
-            httpServletResponse.sendError(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-
-        //定义response输出类型为image/jpeg类型，使用response输出流输出图片的byte数组
-        captchaChallengeAsJpeg = jpegOutputStream.toByteArray();
-        httpServletResponse.setHeader("Cache-Control", "no-store");
-        httpServletResponse.setHeader("Pragma", "no-cache");
-        httpServletResponse.setDateHeader("Expires", 0);
-        httpServletResponse.setContentType("image/jpeg");
-        ServletOutputStream responseOutputStream = httpServletResponse.getOutputStream();
-        responseOutputStream.write(captchaChallengeAsJpeg);
-        responseOutputStream.flush();
-        responseOutputStream.close();
-    }*/
-
-    /**
-     * 登录
-     */
-   /* @PostMapping("/login")
-    public String login(UserDTO userDTO,HttpServletRequest httpServletRequest, Model model) {
 
 
-        System.out.println(userDTO);
-
-        String code = redisTemplate.opsForValue().get("code");
-
-        //String parameter = httpServletRequest.getParameter("code");
-
-        System.out.println("原code+" + code + "+填写的code+" + userDTO.getCaptcha());
-        if (!code.equals(userDTO.getCaptcha())) {
-            System.out.println("验证码有误");
-            return "www.test.com";
-        }
-        Subject subject = SecurityUtils.getSubject();
-
-        String password = userDTO.getPassword();
-        UsernamePasswordToken token = new UsernamePasswordToken(userDTO.getUsername(), password);
-
-        subject.login(token);
-
-        if (subject.isAuthenticated()) {
-            //当前用户经过了认证
-            model.addAttribute("username",token.getUsername());
-            return "list";
-        } else {
-            token.clear();
-            return "login";
-        }
-    }*/
 
     /**
      * 登出
@@ -161,10 +95,6 @@ public class UserController {
         return "updateUser";
     }
 
-    @GetMapping("/showLogin")
-    public String showLogin(){
-        return "login";
-    }
 
     /**
      * 查询所有用户
@@ -312,12 +242,6 @@ public class UserController {
         return ResponseEntity.ok(roles);
 
     }
-
-
-
-
-
-
 
 
 

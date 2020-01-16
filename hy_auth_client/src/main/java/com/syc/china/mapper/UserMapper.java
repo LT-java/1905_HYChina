@@ -4,6 +4,7 @@ import com.syc.china.pojo.User;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import tk.mybatis.mapper.common.Mapper;
 
 public interface UserMapper extends Mapper<User> {
@@ -24,4 +25,10 @@ public interface UserMapper extends Mapper<User> {
      */
     @Delete("delete from tb_user_role where user_id = #{userId}")
     int deleteMid(@Param("userId") Integer userId);
+
+
+    @Select("select decription from tb_role where id = (select ur.role_id from tb_user_role ur where ur.user_id= #{id}) ")
+    String queryRoleName(@Param("id")Integer id);
+
+
 }

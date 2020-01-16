@@ -90,7 +90,10 @@ public class UserController {
     @PostMapping("/login")
     public String login(@RequestParam("username") String username, @RequestParam("password") String password, HttpSession session) {
         LoginDTO dto = userService.login(username, password);
+        User user = userService.findUserByName(username);
+        String roleName = userServiceImpl.queryRoleName(user.getId());
         session.setAttribute("token",dto.getAccessToken());
+        session.setAttribute("roleName",roleName);
         return "redirect:/cars/query";
     }
 

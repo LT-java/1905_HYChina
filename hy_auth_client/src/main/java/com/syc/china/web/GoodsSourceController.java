@@ -33,15 +33,12 @@ public class GoodsSourceController {
     private GoodsTypeMapper goodsTypeMapper;
 
 
-    @PreAuthorize("hasRole('BUSINESS_GOODS')")
     @ApiOperation(value = "查询所有货源",notes = "该业务可查询出所有货源信息")
     @GetMapping("/query")
-    public String query(Model model,
-                        @RequestParam(required = false,defaultValue="1",value="pageNum")Integer pageNum,
-                        @RequestParam(defaultValue="5",value="pageSize")Integer pageSize,
-                        @RequestParam(value = "key",required = false)String key,
-                        @RequestHeader("authorization") String authorization){
-        System.out.println(authorization);
+    public String query(Model model,@RequestParam(required = false,defaultValue="1",value="pageNum")Integer pageNum,
+                         @RequestParam(defaultValue="5",value="pageSize")Integer pageSize,
+                         @RequestParam(value = "key",required = false)String key){
+
         List<GoodsSource> goods = goodsSourceService.queryAll(pageNum,pageSize,key);
         PageInfo<GoodsSource> pageInfo = new PageInfo<GoodsSource>(goods,pageSize);
         if(goods != null){
@@ -52,6 +49,8 @@ public class GoodsSourceController {
             return null;
         }
     }
+
+
 
     @ApiOperation(value = "查看货源详细内容")
     @ApiImplicitParam(name = "id",value = "货源ID",required = true,dataType = "Integer")
@@ -64,24 +63,29 @@ public class GoodsSourceController {
     }
 
 
-    @ApiOperation(value = "添加货源")
-    @ApiImplicitParam(name = "goodsSource",value = "货源",required = true,dataType ="GoodsSource")
-    @PostMapping("/setGoods")
-    public String giveGoods(GoodsSource goodsSource){
-            int row = goodsSourceService.insert(goodsSource);
-            if(row > 0){
-                return "redirect:/api/source/goods/query";
-            }
-                return null;
-    }
+
 
     @ApiOperation(value = "删除货源")
     @ApiImplicitParam(name = "id",value = "货源ID",required = true,dataType = "Integer")
     @GetMapping("/delete/{id}")
     public String deleteGoods(@PathVariable("id")Integer id){
         goodsSourceService.deleteById(id);
-        return "redirect:/api/source/goods/query";
+        return "redirect:/goods/query";
     }
+
+
+    /**
+     * 发布货源鉴权，成功可显示页面
+     * @param authorization
+     * @return
+     */
+    @GetMapping("/authAdd")
+    @PreAuthorize("hasRole('GOODS')")
+    @ResponseBody
+    public String authAdd(@RequestHeader("authorization") String authorization){
+        return "yes";
+    }
+
 
     @ApiOperation(value = "回显货源数据")
     @GetMapping("/add")
@@ -101,6 +105,17 @@ public class GoodsSourceController {
         return "showAddGoods";
     }
 
+    @ApiOperation(value = "添加货源")
+    @ApiImplicitParam(name = "goodsSource",value = "货源",required = true,dataType ="GoodsSource")
+    @PostMapping("/setGoods")
+    public String giveGoods(GoodsSource goodsSource){
+        System.out.println(goodsSource+"-------------------------");
+        int row = goodsSourceService.insert(goodsSource);
+        if(row > 0){
+            return "redirect:/goods/query";
+        }
+        return null;
+    }
 
     @ApiIgnore
     @ResponseBody
@@ -186,7 +201,7 @@ public class GoodsSourceController {
         int row = goodsSourceService.update(goodsSource);
 
         if(row > 0){
-            return "redirect:/api/source/goods/query";
+            return "redirect:/goods/query";
         }
         return null;
     }

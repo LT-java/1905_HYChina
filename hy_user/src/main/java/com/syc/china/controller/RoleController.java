@@ -57,7 +57,7 @@ public class RoleController {
     }
 
     @PutMapping("/changeRole")
-    public ResponseEntity<Void> updateRole(@RequestBody Role role){
+    public ResponseEntity<Void> updateRole(Role role){
         roleService.updateRole(role);
         return ResponseEntity.ok(null);
     }

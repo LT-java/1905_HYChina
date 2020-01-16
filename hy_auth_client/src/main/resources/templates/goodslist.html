@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>管理员</title>
+    <title>化运中国</title>
     <!-- Bootstrap core CSS -->
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template-->
@@ -42,6 +42,7 @@
 
 <body class="text-center" >
         <div class="d1">
+            <span th:text="|欢迎登录，你的身份是：${session.roleName}|" style="color: red;"></span>
             <h1>全部貨源信息</h1>
             <!--class="table table-hover"-->
             <table class="table table-hover">
@@ -61,7 +62,7 @@
                     <td th:text="${good.startTime}"></td>
                     <td th:text="${good.ownerName}"></td>
                     <td th:text="${good.phone}"></td>
-                    <td><a th:href="@{/api/source/goods/delete/}+${good.id}">删除</a>&nbsp;<a th:href="@{/api/source/goods/showUpdate/}+${good.id}">修改</a>&nbsp;<a th:href="@{/api/source/goods/watch/}+${good.id}">查看</a></td>
+                    <td><a th:href="@{/goods/delete/}+${good.id}">删除</a>&nbsp;<a th:href="@{/goods/showUpdate/}+${good.id}">修改</a>&nbsp;<a th:href="@{/goods/watch/}+${good.id}">查看</a></td>
                 </tr>
 
             </table>
@@ -73,37 +74,70 @@
 
                 <ul class="pagination pull-right no-margin">
                     <li th:if="${pageInfo.hasPreviousPage}">
-                        <a th:href="'/api/source/goods/query?pageNum=1'">首页</a>
+                        <a th:href="'/goods/query?pageNum=1'">首页</a>
                     </li>
 
                     <li class="prev" th:if="${pageInfo.hasPreviousPage}">
-                        <a th:href="'/api/source/goods/query?pageNum='+${pageInfo.prePage}">
+                        <a th:href="'/goods/query?pageNum='+${pageInfo.prePage}">
                             <i class="ace-icon fa fa-angle-double-left"></i>
                         </a>
                     </li>
                     <!--遍历条数-->
                     <li th:each="nav:${pageInfo.navigatepageNums}">
-                        <a th:href="'/api/source/goods/query?pageNum='+${nav}" th:text="${nav}" th:if="${nav != pageInfo.pageNum}"></a>
+                        <a th:href="'/goods/query?pageNum='+${nav}" th:text="${nav}" th:if="${nav != pageInfo.pageNum}"></a>
                         <span style="font-weight: bold;background: #6faed9;" th:if="${nav == pageInfo.pageNum}" th:text="${nav}" ></span>
                     </li>
 
                     <li class="next" th:if="${pageInfo.hasNextPage}">
-                        <a th:href="'/api/source/goods/query?pageNum='+${pageInfo.nextPage}">
+                        <a th:href="'/goods/query?pageNum='+${pageInfo.nextPage}">
                             <i class="ace-icon fa fa-angle-double-right"></i>
                         </a>
                     </li>
 
                     <li>
-                        <a th:href="'/api/source/goods/query?pageNum='+${pageInfo.pages}">尾页</a>
+                        <a th:href="'/goods/query?pageNum='+${pageInfo.pages}">尾页</a>
                     </li>
                 </ul>
             </div>
 
-                <a th:href="@{/api/source/cars/add}"><button class = "b1">发布车源</button></a>
-                <a th:href="@{/api/source/goods/add}"><button class = "b2">发布货源</button></a>
+                <button class = "b1">发布车源</button>
+                <button class = "b2">发布货源</button>
                 <a th:href="@{/cars/query}"><button class = "b3">查看车源</button></a>
-
+                <input type="hidden" th:value="${session.token}" id="in1"/>
         </div>
 
 </body>
+<script src="../js/jquery-3.1.1.js"></script>
+<script type="text/javascript">
+    $(".b1").click(function() {
+        //alert($("#in1").val());
+        $.ajax({
+            type: "GET",
+            url: "/cars/authAdd",
+            beforeSend: function(request) {
+                request.setRequestHeader("authorization","Bearer " + $("#in1").val());
+            },
+            success: function(result) {
+                if(result){
+                    window.location.href="/cars/add";
+                }
+            }
+        });
+    });
+    $(".b2").click(function() {
+        //alert($("#in1").val());
+        $.ajax({
+            type: "GET",
+            url: "/goods/authAdd",
+            beforeSend: function(request) {
+                request.setRequestHeader("authorization","Bearer " + $("#in1").val());
+            },
+            success: function(result) {
+                if(result){
+                    window.location.href="/goods/add";
+                }
+            }
+        });
+    });
+</script>
 </html>

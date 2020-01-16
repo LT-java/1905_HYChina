@@ -51,7 +51,7 @@
                 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
                     <h1>发布车源 </h1>
 
-                    <form th:action="@{/api/source/cars/setCar}" method="post">
+                    <form th:action="@{/cars/setCar}" method="post">
                         <input type="hidden" name="id"/>
                         <div class="form-group">
                              <label>出发地</label>
@@ -164,7 +164,7 @@
                             $.ajax({
                                 type: 'post',
                                 dataType: 'json',
-                                url: '/api/source/cars/getCity',
+                                url: '/cars/getCity',
                                 data: "id=" + id,
                                 cache: false,
                                 async: true,
@@ -181,7 +181,7 @@
                                 $.ajax({
                                     type: 'post',
                                     dataType: 'json',
-                                    url: '/api/source/cars/getDistrict',
+                                    url: '/cars/getDistrict',
                                     data: "id=" + id,
                                     cache: false,
                                     async: true,
@@ -199,7 +199,7 @@
                             $.ajax({
                                 type: 'post',
                                 dataType: 'json',
-                                url: '/api/source/cars/getCity',
+                                url: '/cars/getCity',
                                 data: "id=" + id,
                                 cache: false,
                                 async: true,
@@ -216,7 +216,7 @@
                             $.ajax({
                                 type: 'post',
                                 dataType: 'json',
-                                url: '/api/source/cars/getDistrict',
+                                url: '/cars/getDistrict',
                                 data: "id=" + id,
                                 cache: false,
                                 async: true,

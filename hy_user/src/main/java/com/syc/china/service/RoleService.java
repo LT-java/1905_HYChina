@@ -50,7 +50,6 @@ public class RoleService {
     }
 
     public void addRole(Role role) {
-        role.setCreateTime(new Date());
         roleMapper.insertSelective(role);
     }
 

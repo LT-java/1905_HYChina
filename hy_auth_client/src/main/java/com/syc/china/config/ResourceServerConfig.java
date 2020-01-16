@@ -19,7 +19,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/js/**","/**.html","/css/**","/img/**","/layui/**","/cars/query","/user/phoneCode","/user/login","/user/register","/user/showLogin","/user/showRegister")
+                .antMatchers("/goods/updateGoods","/goods/setGoods","/goods/add","/goods/watch/**","/goods/showUpdate/**","/goods/delete/**","/cars/updateCar","/cars/setCar","/cars/add","/cars/watch/**","/cars/showUpdate/**","/cars/delete/**","/js/**","/**.html","/cars/getCity/**","/goods/getCity/**","/goods/getDistrict/**","/cars/add","/cars/getDistrict/**","/css/**","/goods/query","/img/**","/layui/**","/cars/query","/user/phoneCode","/user/login","/user/register","/user/showLogin","/user/showRegister")
                 .permitAll()
                 .antMatchers("/**")
                 .authenticated()

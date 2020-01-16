@@ -8,6 +8,7 @@ import com.syc.china.service.LinkService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -56,6 +57,19 @@ public ResponseEntity<PageResult> page(
     PageResult<CarSource> result=this.carSourceService.queryCarsourcesPage(page,rows,key);
     return  ResponseEntity.ok(result);
 }*/
+
+    /**
+     * 发布车源鉴权，成功可显示页面
+     * @param authorization
+     * @return
+     */
+    @GetMapping("/authAdd")
+    @PreAuthorize("hasRole('CARS')")
+    @ResponseBody
+    public String authAdd(@RequestHeader("authorization") String authorization){
+        return "yes";
+    }
+
     @ApiOperation(value = "添加页面的回显",notes = "该业务可回显下拉框中的数据")
     @GetMapping("/add")
     public String add(Model model){
@@ -90,6 +104,12 @@ public ResponseEntity<PageResult> page(
         return dists;
     }
 
+
+    /*@GetMapping("/authShowUpdate/{id}")
+    @PreAuthorize("hasRole('CARS')")
+    public Integer authShowUpdate(@PathVariable("id")Integer id,@RequestHeader("authorization")String authorization){
+        return  id;
+    }*/
 
     @ApiOperation(value = "修改之前回显")
     @ApiImplicitParam(name = "id",value = "车源ID",dataType = "Integer",required = true)
@@ -151,7 +171,7 @@ public ResponseEntity<PageResult> page(
     public String giveCar( CarSource carSource){
         int rows = carSourceService.insert(carSource);
         if(rows > 0){
-            return "redirect:/api/source/cars/query";
+            return "redirect:/cars/query";
         }
         return  null;
     }
@@ -163,7 +183,7 @@ public ResponseEntity<PageResult> page(
         System.out.println(carSource);
         int rows = carSourceService.update(carSource);
         if(rows > 0){
-            return "redirect:/api/source/cars/query";
+            return "redirect:/cars/query";
         }
         return null;
     }
@@ -173,7 +193,7 @@ public ResponseEntity<PageResult> page(
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id")Integer id,Model model){
         carSourceService.deleteById(id);
-        return "redirect:/api/source/cars/query";
+        return "redirect:/cars/query";
     }
 
     @ApiOperation("查看车源详情")
@@ -186,7 +206,6 @@ public ResponseEntity<PageResult> page(
         return "watch";
     }
 
-    /*按照地区搜索*/
 
 
 

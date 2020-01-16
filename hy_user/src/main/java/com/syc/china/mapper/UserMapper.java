@@ -24,7 +24,7 @@ public interface UserMapper extends Mapper<User> {
     @Select("select password from tb_user where username=#{username}")
     String getPassword(String username);
 
-    @Select("select description from tb_role where id = (select role_id from tb_user_role where user_id = #{userId})")
+    @Select("select decription from tb_role where id = (select role_id from tb_user_role where user_id = #{userId})")
     String queryMemberName(@Param("userId") Integer userId);
 
     /**

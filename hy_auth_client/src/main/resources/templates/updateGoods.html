@@ -51,7 +51,7 @@
                 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
                     <h1>修改货源信息 </h1>
 
-                    <form th:action="@{/api/source/goodsSource/updateGoods}" method="post">
+                    <form th:action="@{/goods/updateGoods}" method="post">
                         <input type="hidden" name="id" th:value="${currGoodsSource.id}"/>
                         <div class="form-group">
                              <label>出发地</label>
@@ -173,7 +173,7 @@
                             $.ajax({
                                 type: 'post',
                                 dataType: 'json',
-                                url: '/api/source/goods/getCity',
+                                url: '/goods/getCity',
                                 data: "id=" + id,
                                 cache: false,
                                 async: true,
@@ -190,7 +190,7 @@
                             $.ajax({
                                 type: 'post',
                                 dataType: 'json',
-                                url: '/api/source/goods/getDistrict',
+                                url: '/goods/getDistrict',
                                 data: "id=" + id,
                                 cache: false,
                                 async: true,
@@ -208,7 +208,7 @@
                             $.ajax({
                                 type: 'post',
                                 dataType: 'json',
-                                url: '/api/source/goods/getCity',
+                                url: '/goods/getCity',
                                 data: "id=" + id,
                                 cache: false,
                                 async: true,
@@ -225,7 +225,7 @@
                             $.ajax({
                                 type: 'post',
                                 dataType: 'json',
-                                url: '/api/source/goods/getDistrict',
+                                url: '/goods/getDistrict',
                                 data: "id=" + id,
                                 cache: false,
                                 async: true,
