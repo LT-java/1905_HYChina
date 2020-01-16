@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: monitor-server
+  profiles:
+    active: dev
+  cloud:
+    config:
+      discovery:
+        service-id: config-server
+        enabled: true #开启配置服务功能
+      fail-fast: true
+  security:
+    user:
+      name: admin
+      password: 123
+
+eureka:
+  instance:
+    health-check-url-path: /actuator/health #检查检查的接口路径
+    metadata-map:
+      user.name: ${spring.security.user.name}
+      user.password: ${spring.security.user.password}
+  client:
+    service-url:
+      #defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://admin:123@localhost:8761/eureka/
+
+#actuator设置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" #暴露所有端点,默认是info和health
+  endpoint:
+    health:
+      show-details: always #默认是never

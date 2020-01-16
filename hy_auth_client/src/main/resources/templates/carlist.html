@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http:www.thymeleaf.org" >
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>华运中国</title>
+    <!-- Bootstrap core CSS -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="../css/signin.css" rel="stylesheet">
+    <style>
+        .b2{
+            border-radius: 5px;
+            width: 150px;
+            height: 40px;
+            background: red;
+            color: white;
+        }
+        .b1{
+            border-radius: 5px;
+            width: 150px;
+            height: 40px;
+            background: green;
+            color: white;
+        }
+        .b3{
+            border-radius: 5px;
+            width: 150px;
+            height: 40px;
+            background: blue;
+            color: white;
+        }
+        .d1{
+            width: 100%;
+        }
+
+    </style>
+</head>
+
+<body class="text-center">
+   <!-- <a th:text="|欢迎管理员: ${session.token}登录|">Company name</a>-->
+
+    <div class="d1">
+        <!--<span th:text = "${session.token}" class="sp">-->
+        <h1>全部車源信息</h1>
+        <button> 搜索</button>
+
+        <table class="table table-hover">
+            <tr>
+                <th>编号</th>
+                <th>路线信息</th>
+                <th>基本信息</th>
+                <th>发布时间</th>
+                <th>联系人</th>
+                <th>联系电话</th>
+                <th>操作</th>
+            </tr>
+            <tr th:each="car : ${cars}">
+                <td th:text="${car.id}"></td>
+                <td th:text="${car.startName}+|——>${car.endName}|"></td>
+                <td th:text="|车辆类型-${car.carName},${car.transportName},${car.weight}${car.unitName},${car.goodsName},${car.price}元/${car.unitName}|"></td>
+                <td th:text="${car.startTime}"></td>
+                <td th:text="${car.ownerName}"></td>
+                <td th:text="${car.phone}"></td>
+                <td><a th:href="@{/api/source/cars/delete/}+${car.id}">删除</a>&nbsp;<a th:href="@{/api/source/cars/showUpdate/}+${car.id}">修改</a>&nbsp;<a th:href="@{/api/source/cars/watch/}+${car.id}">查看</a></td>
+            </tr>
+        </table>
+        <!--显示分页信息-->
+        <div class="modal-footer no-margin-top">
+            <div class="col-md-6">
+                当前第 [[${pageInfo.pageNum}]]页,共 [[${pageInfo.pages}]] 页.一共 [[${pageInfo.total}]] 条记录
+            </div>
+
+            <ul class="pagination pull-right no-margin">
+                <li th:if="${pageInfo.hasPreviousPage}">
+                    <a th:href="'/api/source/cars/query?pageNum=1'">首页</a>
+                </li>
+
+                <li class="prev" th:if="${pageInfo.hasPreviousPage}">
+                    <a th:href="'/api/source/cars/query?pageNum='+${pageInfo.prePage}">
+                        <i class="ace-icon fa fa-angle-double-left"></i>
+                    </a>
+                </li>
+                <!--遍历条数-->
+                <li th:each="nav:${pageInfo.navigatepageNums}">
+                    <a th:href="'/api/source/cars/query?pageNum='+${nav}" th:text="${nav}" th:if="${nav != pageInfo.pageNum}"></a>
+                    <span style="font-weight: bold;background: #6faed9;" th:if="${nav == pageInfo.pageNum}" th:text="${nav}" ></span>
+                </li>
+
+                <li class="next" th:if="${pageInfo.hasNextPage}">
+                    <a th:href="'/api/source/cars/query?pageNum='+${pageInfo.nextPage}">
+                        <i class="ace-icon fa fa-angle-double-right"></i>
+                    </a>
+                </li>
+
+                <li>
+                    <a th:href="'/api/source/cars/query?pageNum='+${pageInfo.pages}">尾页</a>
+                </li>
+            </ul>
+        </div>
+        <a th:href="@{/api/source/cars/add}"><button class = "b1">发布车源</button></a>
+        <a th:href="@{/api/source/goods/add}"><button class = "b2">发布货源</button></a>
+        <button class = "b3">查看货源</button>
+        <input type="hidden" th:value="${session.token}" id="in1"/>
+    </div>
+</body>
+<script src="../js/jquery-3.1.1.js"></script>
+<script>
+    $(".b3").click(function() {
+        //alert($("#in1").val());
+        $.ajax({
+            type: "GET",
+            url: "/goods/query",
+            beforeSend: function(request) {
+                request.setRequestHeader("authorization","Bearer " + $("#in1").val());
+            },
+            success: function(result) {
+            }
+        });
+    });
+
+</script>
+</html>

@@ -1,0 +1,50 @@
+server:
+  port: 8767
+spring:
+  application:
+    name: user-service
+  profiles:
+    active: dev #对应的是某个(3种)环境的配置文件
+  cloud:
+    config:
+      discovery:
+        service-id: config-server
+        enabled: true #开启配置服务功能
+      fail-fast: true
+  datasource:
+    url: jdbc:mysql://10.11.64.226:3306/hychina
+    password: 1234
+    username: user
+    driver-class-name: com.mysql.jdbc.Driver
+  main:
+    allow-bean-definition-overriding: true
+  thymeleaf:
+    cache: false
+  redis:
+    host: 192.168.176.128
+    port: 6378
+  rabbitmq:
+    host: 192.168.176.128
+    username: wlkg
+    password: wlkg
+    virtual-host: /wlkg
+    template:
+      retry:
+        enabled: true
+        initial-interval: 10000ms
+        max-interval: 210000ms
+        multiplier: 2
+    publisher-confirms: true
+eureka:
+  client:
+    service-url:
+      defaultZone: http://admin:123@localhost:8761/eureka/
+#actuator设置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" #暴露所有端点,默认是info和health
+  endpoint:
+    health:
+      show-details: always

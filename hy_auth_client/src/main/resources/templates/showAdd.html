@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)http://getbootstrap.com/docs/4.0/examples/dashboard/ -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Dashboard Template for Bootstrap</title>
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/css/dashboard.css" rel="stylesheet">
+    <script type="text/javascript" charset="utf-8" src ="/js/jquery-3.1.1.js"></script>
+</head>
+
+<body>
+<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+    <!--<a class="navbar-brand col-sm-3 col-md-2 mr-0"  href="" th:text="${session.admin!=null?session.admin.usernmae:''}">Company
+        name</a>-->
+    <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="华运中国">
+    <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+            <a class="nav-link" th:href="@{/loginOut}">Sign out</a>
+        </li>
+    </ul>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/showUser}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-cart">
+                                <circle cx="9" cy="21" r="1"></circle>
+                                <circle cx="20" cy="21" r="1"></circle>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                            </svg>
+                            发布车源 <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container-fluid">
+            <div class="row">
+                <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+                    <h1>发布车源 </h1>
+
+                    <form th:action="@{/api/source/cars/setCar}" method="post">
+                        <input type="hidden" name="id"/>
+                        <div class="form-group">
+                             <label>出发地</label>
+                            <select class="form-control notnull" name="provinceId" id="provinceIds">
+                                <option value="">-选择省-</option>
+                                <option th:each="pro:${pros}" th:value="${pro.id}" th:text="${pro.name}" ></option>
+                            </select>
+                            <select class="form-control notnull" name="cityId" id="cityIds">
+                                <option value="">-选择市-</option>
+                            </select>
+                            <select class="form-control notnull" name="districtId" id="districtIds">
+                                <option value="">-选择区-</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                             <label>目的地</label>
+                            <select class="form-control notnull" name="provinceIdEnd" id="provinceIdEnds">
+                                <option value="">-选择省-</option>
+                                <option th:each="pro:${pros}" th:value="${pro.id}" th:text="${pro.name}" ></option>
+                            </select>
+                            <select class="form-control notnull" name="cityIdEnd" id="cityIdEnds">
+                                <option value="">-选择市-</option>
+                            </select>
+                            <select class="form-control notnull" name="districtIdEnd" id="districtIdEnds">
+                                <option value="">-选择区-</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>车辆类型</label>
+                            <select class="form-control" name="carId" id="carIds">
+                                <option th:each="car:${cars}" th:value="${car.id}" th:text="${car.name}"></option>
+                            </select> 
+                        </div>
+                        <div class="form-group">
+                            <label>车辆载重</label>
+                            <input type="text" name="weight"/>
+                            <select class="form-control" name="unitId" id="unitIds">
+                                <option th:each="unit:${units}" th:value="${unit.id}" th:text="${unit.name}"></option>
+                            </select> 
+                        </div>
+                        <div class="form-group">
+                            <label>可载种类</label>
+                            <select class="form-control" name="goodsId" id="goodsIds">
+                                <option th:each="good:${goods}" th:value="${good.id}" th:text="${good.name}"></option>
+                            </select> 
+                        </div>
+                        <div class="form-group">
+                            <label>车辆数量</label>
+                            <input type="text" name="quantity"/>
+                        </div>
+                        <div class="form-group">
+                            <label>路线类型</label>
+                            <select class="form-control" name="transportId" id="transportIds">
+                                <option th:each="transport:${transports}" th:value="${transport.id}" th:text="${transport.name}"></option>
+                            </select> 
+                        </div>
+                        <div class="form-group">
+                            <label>价格</label>
+                            <input type="text" name="price" /><span>元/每</span>
+                            <select class="form-control">
+                                <option th:each="unit:${units}" th:value="${unit.id}" th:text="${unit.name}"></option>
+                            </select> 
+                        </div>
+                        <h2>联系方式[必填]</h2>
+                        <div class="form-group">
+                              <label>姓名:</label><input  name="ownerName" id="personName" type="text" class="form-control" />            
+                            <label>电话:</label><input  name="phone" type="text" id="tele" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                              <label>qq号:</label><input  name="qq" type="text" class="form-control" />            
+                            <label>邮箱:</label><input  name="email" type="text" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                              <label>备注:</label><input  name="remarks" id="remark" type="text" class="form-control" />            
+                        </div>
+                        <!--<div class="form-group">
+                              <label>预览:</label><input name="preview" id="pre" type="text" class="form-control" />            
+                        </div>-->
+
+                        <button type="submit" class="btn btn-primary">发布</button>   
+                    </form>
+                    <script type="text/javascript" th:inline="javascript">
+                        /*[name = province]:text*/
+                        /*$("[name = remarks]:text").blur(function(){
+                            var a = document.getElementById("provinceIds").valueOf();
+                            var b = document.getElementById("cityIds").value;
+                            var c = document.getElementById("districtIds").value;
+                            var startplace = a + b + c;
+
+                            var d = document.getElementById("provinceIdEnds").value;
+                            var e = document.getElementById("cityIdEnds").value;
+                            var f = document.getElementById("districtIdEnds").value;
+                            var endplace = d + e + f;
+                            var carName = document.getElementById("carIds").value;
+                            var goodsName = document.getElementById("goodsIds").value;
+                            var name = document.getElementById("personName").value;
+                            var phone = document.getElementById("tele").value;
+                            var remarks = document.getElementById("remark").value;
+                            var s = startplace+"——>"+endplace+",车辆类型-"+carName+",货物种类-"+goodsName+","+name+",联系电话："+phone+",备注："+remarks;
+                            /!*$("#pre");*!/
+                            document.getElementById("pre").value = s;
+                        });*/
+
+
+
+
+                        $("#provinceIds").change(function() {
+                            var id = $("#provinceIds").val();
+                            $.ajax({
+                                type: 'post',
+                                dataType: 'json',
+                                url: '/api/source/cars/getCity',
+                                data: "id=" + id,
+                                cache: false,
+                                async: true,
+                                success: function (data) {
+                                    var t2 = $("#cityIds").empty();
+                                    for ( var i = 0; i < data.length; i++) {
+                                        t2.append("<option value="+data[i].id+">"+ data[i].name+"</option>");
+                                    }
+                                }
+                            })
+                        });
+                            $("#cityIds").change(function() {
+                                var id = $("#cityIds").val();
+                                $.ajax({
+                                    type: 'post',
+                                    dataType: 'json',
+                                    url: '/api/source/cars/getDistrict',
+                                    data: "id=" + id,
+                                    cache: false,
+                                    async: true,
+                                    success: function (data) {
+                                        var t3 = $("#districtIds").empty();
+                                        for ( var i = 0; i < data.length; i++) {
+                                            t3.append("<option value='"+data[i].id+"'>"+ data[i].name+"</option>");
+                                        }
+                                    }
+                                })
+                            });
+
+                        $("#provinceIdEnds").change(function() {
+                            var id = $("#provinceIdEnds").val();
+                            $.ajax({
+                                type: 'post',
+                                dataType: 'json',
+                                url: '/api/source/cars/getCity',
+                                data: "id=" + id,
+                                cache: false,
+                                async: true,
+                                success: function (data) {
+                                    var t2 = $("#cityIdEnds").empty();
+                                    for ( var i = 0; i < data.length; i++) {
+                                        t2.append("<option value="+data[i].id+">"+ data[i].name+"</option>");
+                                    }
+                                }
+                            })
+                        });
+                        $("#cityIdEnds").change(function() {
+                            var id = $("#cityIdEnds").val();
+                            $.ajax({
+                                type: 'post',
+                                dataType: 'json',
+                                url: '/api/source/cars/getDistrict',
+                                data: "id=" + id,
+                                cache: false,
+                                async: true,
+                                success: function (data) {
+                                    var t3 = $("#districtIdEnds").empty();
+                                    for ( var i = 0; i < data.length; i++) {
+                                        t3.append("<option value='"+data[i].id+"'>"+ data[i].name+"</option>");
+                                    }
+                                }
+                            })
+                        });
+
+                        /*$("[name = name]:text").blur(function(){
+                            var name = document.getElementById("name").value;
+                            $.ajax({
+                                type: 'post',
+                                dataType: 'text',
+                                url: '/check',
+                                data: "name="+name,
+                                cache: false,
+                                async: true,
+                                success: function (resp) {
+                                    if(resp == "true"){
+                                        $("#sp").css("color","green").text("可以继续申请项目");
+                                    }else{
+                                        alert("每位同学只能报两项运动")
+                                    }
+                                }
+                            });*/
+
+                            /*$.post("http://localhost:8080/pet/selectPetByNumber",
+                                {number:$(this).val()},
+                                function(resp){
+                                    if(resp == "true"){
+                                        $("#msg").css("color","green").text("该注册号可以使用");
+                                    }else{
+                                        $("#msg").css("color","red").text("该注册号已经存在");
+                                    }
+                                }
+                            );*/
+
+                    </script>
+                </main>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

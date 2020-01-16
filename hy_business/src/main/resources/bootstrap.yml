@@ -1,0 +1,36 @@
+
+spring:
+  application:
+    name: business-server
+  datasource:
+    url: jdbc:mysql://10.11.64.226:3306/hychina
+    password: 1234
+    username: user
+    driver-class-name: com.mysql.jdbc.Driver
+  profiles:
+    active: dev #对应的是某个(3种)环境的配置文件
+  cloud:
+    config:
+      discovery:
+        service-id: config-server #指定配置中心的服务名称
+        enabled: true
+      fail-fast: true
+  main:
+    allow-bean-definition-overriding: true
+  thymeleaf:
+    cache: false
+eureka:
+  client:
+    service-url:
+      defaultZone: http://admin:123@localhost:8761/eureka/
+#actuator设置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" #暴露所有端点,默认是info和health
+  endpoint:
+    health:
+      show-details: always
+server:
+  port: 8765
